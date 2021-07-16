@@ -1,0 +1,16 @@
+#!/bin/bash
+
+echo "Tools: assetfinder, subfinder, findomain, anubis"
+assetfinder -subs-only $1 >> dups
+echo "assetfinder done"
+
+subfinder -d $1 -silent >> dups
+echo "subfinder done"
+
+findomain -t $1 -q >> dups
+echo "findomain done"
+
+anubis -t $1 -S >> dups
+echo "anubis done"
+cat dups | grep $1 | sort -u >> autosub
+rm dups
