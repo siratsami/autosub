@@ -1,16 +1,18 @@
 #!/bin/bash
 
-echo "Tools: assetfinder, subfinder, findomain, anubis"
-assetfinder -subs-only $1 >> dups
-echo "assetfinder done"
-
-subfinder -d $1 -silent >> dups
-echo "subfinder done"
-
-findomain -t $1 -q >> dups
-echo "findomain done"
-
-anubis -t $1 -S >> dups
-echo "anubis done"
-cat dups | grep $1 | sort -u >> autosub
-rm dups
+echo ""
+echo " AutoSub By B4GG3R Twitter: siratsami71"
+echo ""
+assetfinder -subs-only $1 >> 1
+echo " assetfinder done"
+subfinder -d $1 -silent >> 1
+echo " subfinder done"
+findomain -t $1 -q >> 1
+echo " findomain done"
+subzero $1 | grep $1 >> 1
+echo " subzero done"
+waybackurls techeye.org | awk -F'://' '{print $2}' | awk -F'/' '{print $1}' | awk -F':' '{print $1}' | sort -u >> 1
+echo " waybackurls done"
+cat 1 | grep $1 | grep -v ' ' | sort -u >> autosub
+rm 1
+cat autosub | httpx -silent -status-code -content-length -location -path '/' >> httpx
