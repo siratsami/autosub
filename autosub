@@ -3,16 +3,19 @@
 echo ""
 echo " AutoSub By B4GG3R Twitter: siratsami71"
 echo ""
-assetfinder -subs-only $1 >> 1
+echo " Doing Basic Recon For $1"
+mkdir $1
+assetfinder -subs-only $1 >> $1/1
 echo " assetfinder done"
-subfinder -d $1 -silent >> 1
-echo " subfinder done"
-findomain -t $1 -q >> 1
-echo " findomain done"
-subzero $1 | grep $1 >> 1
+subzero $1 | grep $1 | grep -v ':' >> $1/1
 echo " subzero done"
-waybackurls $1 | awk -F'://' '{print $2}' | awk -F'/' '{print $1}' | awk -F':' '{print $1}' | sort -u >> 1
+subfinder -d $1 -silent >> $1/1
+echo " subfinder done"
+findomain -t $1 -q >> $1/1
+echo " findomain done"
+waybackurls $1 | awk -F'://' '{print $2}' | awk -F'/' '{print $1}' | awk -F':' '{print $1}' | sort -u >> $1/1
 echo " waybackurls done"
-cat 1 | grep $1 | grep -v ' ' | sort -u >> autosub
-rm 1
-cat autosub | httpx -silent -status-code -content-length -location -path '/' >> httpx
+cat $1/1 | grep $1 | grep -v ' ' | sort -u >> $1/$1_autosub
+rm $1/1
+cat $1/$1_autosub | httpx -silent -status-code -content-length -location -cname -path '/' -follow-redirects -no-color >> $1/$1_httpx
+echo " httpx done"
