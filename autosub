@@ -11,7 +11,7 @@ findomain -t $1 -q >> 1
 echo " findomain done"
 subzero $1 | grep $1 >> 1
 echo " subzero done"
-waybackurls techeye.org | awk -F'://' '{print $2}' | awk -F'/' '{print $1}' | awk -F':' '{print $1}' | sort -u >> 1
+waybackurls $1 | awk -F'://' '{print $2}' | awk -F'/' '{print $1}' | awk -F':' '{print $1}' | sort -u >> 1
 echo " waybackurls done"
 cat 1 | grep $1 | grep -v ' ' | sort -u >> autosub
 rm 1
