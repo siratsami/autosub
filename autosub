@@ -5,7 +5,7 @@ echo " AutoSub By B4GG3R Twitter: siratsami71"
 echo ""
 echo " Doing Basic Recon For $1"
 mkdir $1
-assetfinder -subs-only $1 >> $1/1
+assetfinder -subs-only $1 | grep $1 | grep -v '@' >> $1/1
 echo " assetfinder done"
 subzero $1 | grep $1 | grep -v ':' >> $1/1
 echo " subzero done"
@@ -15,7 +15,12 @@ findomain -t $1 -q >> $1/1
 echo " findomain done"
 waybackurls $1 | awk -F'://' '{print $2}' | awk -F'/' '{print $1}' | awk -F':' '{print $1}' | sort -u >> $1/1
 echo " waybackurls done"
-cat $1/1 | grep $1 | grep -v ' ' | sort -u >> $1/$1_autosub
+curl -s https://crt.sh/?q=hackerone.com | grep hackerone | awk -F'<TD>' '{print $2}' | awk -F'<' '{print $1}' | sort -u | grep -v '*' | grep '\.' >> $1/1
+echo " crt.sh done"
+curl -s "https://dns.bufferover.run/dns?q="$1"" | awk -F',' '{print $2}' | awk -F'"' '{print $1}' | sort -u | grep -oP '[a-z0-9]+\.'$1'' >> $1/1
+cat $1/1 | grep $1 | grep -v ' ' | sort -u >> $1/$1_subs
 rm $1/1
-cat $1/$1_autosub | httpx -silent -status-code -content-length -location -cname -path '/' -follow-redirects -no-color >> $1/$1_httpx
+for count in $(cat $1/$1_subs | wc -l); do echo " Found $count subdomains for $1"; done
+cat $1/$1_subs | httpx -silent -status-code -content-length -location -cname -path '/' -no-color -ip -web-server >> $1/$1_httpx
 echo " httpx done"
+for count in $(cat $1/$1_httpx | wc -l); do echo " Resolved $count subdomains for $1"; done
