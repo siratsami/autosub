@@ -1,26 +1,30 @@
 #!/bin/bash
 
 echo ""
-echo " AutoSub By B4GG3R Twitter: siratsami71"
+echo "$(tput setaf 6) AutoSub By B4GG3R Twitter: siratsami71"
 echo ""
-echo " Doing Basic Recon For $1"
+echo "$(tput setaf 2) Doing Basic Recon For $1"
 mkdir $1
 assetfinder -subs-only $1 | grep $1 | grep -v '@' >> $1/1
-echo " assetfinder done"
+echo "$(tput setaf 1) assetfinder done"
 subzero $1 | grep $1 | grep -v ':' >> $1/1
-echo " subzero done"
+echo "$(tput setaf 1) subzero done"
 subfinder -d $1 -silent >> $1/1
-echo " subfinder done"
+echo "$(tput setaf 1) subfinder done"
 findomain -t $1 -q >> $1/1
-echo " findomain done"
+echo "$(tput setaf 1) findomain done"
 waybackurls $1 | awk -F'://' '{print $2}' | awk -F'/' '{print $1}' | awk -F':' '{print $1}' | sort -u >> $1/1
-echo " waybackurls done"
+echo "$(tput setaf 1) waybackurls done"
 curl -s https://crt.sh/?q=hackerone.com | grep hackerone | awk -F'<TD>' '{print $2}' | awk -F'<' '{print $1}' | sort -u | grep -v '*' | grep '\.' >> $1/1
-echo " crt.sh done"
+echo "$(tput setaf 1) crt.sh done"
 curl -s "https://dns.bufferover.run/dns?q="$1"" | awk -F',' '{print $2}' | awk -F'"' '{print $1}' | sort -u | grep -oP '[a-z0-9]+\.'$1'' >> $1/1
+echo "$(tput setaf 1) bufferover done"
+# replace your security trails api key with APIKEY
+for sub in $(curl -s -k https://api.securitytrails.com/v1/domain/$1/subdomains -H 'apikey: APIKEY' | grep -v ':' | grep -oP '"\K[^"\047]+(?=["\047])'); do echo $sub.$1; done >> $1/1
+echo "$(tput setaf 1) security trails done"
 cat $1/1 | grep $1 | grep -v ' ' | sort -u >> $1/$1_subs
 rm $1/1
-for count in $(cat $1/$1_subs | wc -l); do echo " Found $count subdomains for $1"; done
+for count in $(cat $1/$1_subs | wc -l); do echo "$(tput setaf 3) Found $count subdomains for $1"; done
 cat $1/$1_subs | httpx -silent -status-code -content-length -location -cname -path '/' -no-color -ip -web-server >> $1/$1_httpx
-echo " httpx done"
-for count in $(cat $1/$1_httpx | wc -l); do echo " Resolved $count subdomains for $1"; done
+echo "$(tput setaf 1) httpx done"
+for count in $(cat $1/$1_httpx | wc -l); do echo "$(tput setaf 3) Resolved $count subdomains for $1"; done
