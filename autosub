@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# please make sure you have installed all tools and copied to /usr/bin
+
 echo ""
 echo "$(tput setaf 6) AutoSub By B4GG3R Twitter: siratsami71"
 echo ""
