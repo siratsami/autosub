@@ -15,8 +15,6 @@ subfinder -d $1 -silent >> $1/1
 echo "$(tput setaf 1) subfinder done"
 findomain -t $1 -q >> $1/1
 echo "$(tput setaf 1) findomain done"
-waybackurls $1 | awk -F'://' '{print $2}' | awk -F'/' '{print $1}' | awk -F':' '{print $1}' | sort -u >> $1/1
-echo "$(tput setaf 1) waybackurls done"
 curl -s https://crt.sh/?q=hackerone.com | grep hackerone | awk -F'<TD>' '{print $2}' | awk -F'<' '{print $1}' | sort -u | grep -v '*' | grep '\.' >> $1/1
 echo "$(tput setaf 1) crt.sh done"
 curl -s "https://dns.bufferover.run/dns?q="$1"" | awk -F',' '{print $2}' | awk -F'"' '{print $1}' | sort -u | grep -oP '[a-z0-9]+\.'$1'' >> $1/1
