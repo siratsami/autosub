@@ -25,6 +25,6 @@ echo "$(tput setaf 1) security trails done"
 cat $1/1 | grep $1 | grep -v ' ' | sort -u >> $1/$1_subs
 rm $1/1
 for count in $(cat $1/$1_subs | wc -l); do echo "$(tput setaf 3) Found $count subdomains for $1"; done
-cat $1/$1_subs | httpx -silent -status-code -content-length -location -cname -path '/' -no-color -ip -web-server >> $1/$1_httpx
+cat $1/$1_subs | httpx -silent -status-code -content-length -location -cname -path '/' -ip -web-server >> $1/$1_httpx
 echo "$(tput setaf 1) httpx done"
 for count in $(cat $1/$1_httpx | wc -l); do echo "$(tput setaf 3) Resolved $count subdomains for $1"; done
